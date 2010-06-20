@@ -1,0 +1,59 @@
+.doc_tab_li {
+	margin: 2px;
+	padding: 5px;
+	border-width: 1px;
+	border-color: #369;
+	border-style: solid;
+	background-color: #EFEFEF;
+}
+
+.doc_tab_li_highlight {
+	margin: 2px;
+	padding: 5px;
+	border-width: 1px;
+	border-color: #333;
+	border-style: solid;
+	background-color: #369;
+}
+
+.doc_tab_a_highlight {
+	text-decoration: none;
+	color: #FFF;
+}
+
+.doc_tab_a_highlight:visited {
+	color: #FFF;
+}
+
+.doc_tab_a_highlight:hover {
+	color: red;
+	background-color: transparent;
+	text-decoration: none;
+}
+
+.doc_tab_td_info {
+	text-align: right;
+}
+
+.doc_item_td_title {
+	padding: 2 0 2 0px;
+}
+
+.doc_title_td_title {
+	font-weight: bold;
+	border-width: 0 0 1 0px;
+	border-style: solid;
+	border-color: #369;
+	font-size: 14px;
+	font-family: serif;
+	font-size: 14px;
+
+}
+
+.doc_head_tr {
+	background-color: #f4f4f8;
+}
+
+.doc_hr {
+	color: #369;
+}

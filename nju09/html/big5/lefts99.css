@@ -1,0 +1,16 @@
+*{ font-family:ß∫≈È,arial,sans-serif;}
+A {color:#000000;text-decoration: none;}
+A:LINK {text-decoration: none;}
+A:HOVER {COLOR: #ff0000;text-decoration: underline;background:#dddddd}
+BODY {BACKGROUND-COLOR: #eeeecc; FONT-SIZE: 12px;
+	background-image: url(background.gif)}
+TABLE,TH,TD,P,INPUT,TEXTAREA,SELECT {FONT-SIZE: 12px;}
+body.foot{font-size:12px;background-color:#c0c0c0;background-image: none}
+
+
+#boa_adv_0 {
+	text-align: center;
+}
+#boa_adv_2 {
+	text-align: center;
+}

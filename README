@@ -1,0 +1,128 @@
+    这个系统是在 FireBird BBS 3.0KCN 版本 上修改来的,现在用于一塌糊涂 BBS.
+BBS 域名 为 ytht.net,IP 为 162.105.31.222
+    BBS 系统由一塌糊涂 BBS 的系统维护人员和其它爱好者改写.
+    在改写的过程中,主要参考和使用了下列BBS软件
+
+    老农的FB2000的部分代码
+    南京大学小百合站的zhch的njuweb 0.9的全部代码
+    水木清华BBS的部分代码
+    im-httpd, Michael Bacarella
+    bftpd, Max-Wilhelm Bruker
+
+    还有一些软件,因为本身获得的时候没有注意原作者,所以在这里就不一一列出了,
+欢迎原作者随时联系指正.
+
+								ytht.net
+
+目录结构及文件说明
+by idsnow @yilubbs.com 2009-3-27
+按：梳理了一下目录结构和文件，很多还不清楚，可能描述也不正确，大家看了可以把不正确的该一下，以后作为维护参考资料。
+1、目录结构
+telnet服务
+bbshome-------------------讨论区精华及各类配置文件
+cuserd--------------------yilu做的修改，把用户信息做成一个单独的守护进程管理，可能考虑后面和其他系统集成
+doc-----------------------telnet bbs的帮助文档
+ebbs----------------------chess游戏
+games---------------------小游戏（这下面的一些陈旧无用的功能应考虑删除）
+include--------------------telnet登陆模块头文件
+src------------------------telnet登陆模块代码
+Inn------------------------转信
+Innbbsd--------------------转信
+libythtbbs-----------------bbs扩展应用库
+ythtlib--------------------工具库
+local_utl------------------bbs工具库
+mail2bbs-------------------bbs发信代码
+rzsz-----------------------zmodem协议相关
+site-----------------------建站时需要编辑的配置文件，包含分区，首页。
+smth_sshbsd----------------水木开发的ssh登陆bbs的守护进程
+softeware------------------fastcgi可能代码已无用，考虑废除。
+szm-----------待考---------bms图像处理程序，具体应用待考。
+Yftpd----------------------BBS 的Ftp 服务器，依赖于ythtlib 和 libythtbbs
+yspam---------待考---------访问数据库，可能是生成精彩话题用，待考
+
+web部分
+atthttpd-------------------BBS 的Web 附件服务器部分依赖于 ythtlib 和 libythtbbs
+cthulhu-------待考----------一个快速高性能的cgi守护程序。是否还需要。
+nju09--------------------web服务
+wwwtools--------待删除-------------无用目录，待删除
+
+2、安装时要修改的文件
+bbshome\\badname -------------------不可注册为用户ID的关键字
+bbshome\\etc\\day.plt-----------------
+bbshome\\etc\\day.plt.in
+bbshome\\etc\\expired-----------------通知用户半年更新一次资料
+bbshome\\etc\\f_fill------------------审核人员拒绝注册时给用户的信件
+bbshome\\etc\\fmail-------------------审核人员拒绝注册时给用户的信件。与f_fill内容相同，用途如何区分待考。
+bbshome\\etc\\firstlogin--------------用户注册成功后显示的界面信息
+bbshome\\etc\\goodbye-----------------？？
+bbshome\\etc\\issue-------------------进展画面？
+bbshome\\etc\\j_model.htm-------------期刊订阅界面，yilu增加
+bbshome\\etc\\loginfull---------------上站人数达到上限时，对新来访用户的提示信息
+bbshome\\etc\\logout------------------用户离站时的信息
+bbshome\\etc\\mailcheck---------------自动注册时的注册信
+bbshome\\etc\\menu.ini----------------界面菜单。除了分区之外，其他的选项最好等装好后在系统管理菜单修改。
+bbshome\\etc\\movie-------------------活动看版，5行为一版。可以装系统后修改。
+bbshome\\etc\\newregister-------------这个文件可能已经没有用了。
+bbshome\\etc\\register----------------新用户注册时的提示信息
+bbshome\\etc\\s_fill------------------审批通过用户注册后，自动发出的第一封信
+bbshome\\etc\\s_fill2-----------------审批通过用户注册后，自动发出的第二封信
+bbshome\\etc\\s_personal--------------审批通过用户个人文集申请后，自动发出的信
+bbshome\\etc\\sshd_config--------------ssh登陆的配置信息
+bbshome\\etc\\user_full----------------注册用户已满时，对新申请注册用户的提示信息
+bbshome\\etc\\Welcome------------------进站欢迎画面，原始文档说每次更新后才会显示。
+bbshome\\etc\\Welcome2-----------------进站欢迎画面，也可能已无用。
+bbshome\\etc\\statIP.plt---------------yilu增加，功能和用法待考。
+bbshome\\wwwtmp\\secpage.sec.sample----主界面定制
+bbshome\\wwwtmp\\iplist.txt------------yilu增加，功能待考
+bbshome\\wwwtmp\\digestcolum-----------文摘和分区的对应关系
+
+3、系统自动生成数据用的：
+bbshome\\0Announce/usermanual --------本站使用者手册
+bbshome\\0Announce/groups-------------讨论区精华
+bbshome\\0Announce/bbslist------------本站各类数据统计
+bbshome\\0Announce/sysops-------------闲人免进区 - 限站长进入
+bbshome\\0Announce/.Search------------
+bbshome\\0Announce/.Names-------------
+bbshome\\0Announce/.junk--------------
+bbshome\\0Announce/.logvisit----------
+bbshome\\etc\\posts--------------------每日10大、每周50大、每月百大、年度500大热点，该目录不知是否还在使用。
+bbshome\\etc\\postb.pm
+bbshome\\etc\\secmlist-----------------版务人员名单
+bbshome\\etc\\secmlist.data
+bbshome\\etc\\sysconf.ini--------------系统配置信息
+bbshome\\ftphome----------------------bbs自带的ftp服务用户目录
+bbshome\\.BOARDS----------------------安装前就有，系统回自动填充新的版面信息进去
+bbshome\\etc\\dayf----------------------本日十大热门话题
+
+4、一般不回改动的文件：
+bbshome\\etc\\fonts---------------------系统带的字体
+bbshome\\etc\\fonts\\txt-----------------telnet注册是验证用的数字
+bbshome\\etc\\moneyCenter\\--------------游戏[金融中心]的配置文件，目前只有利率
+bbshome\\etc\\table---------------------统big5字符集用
+bbshome\\etc\\2ndhand_decl，2ndhand_help，2ndhand_wwwdecl------------跳蚤市场相关。后续建议改用交易系统。
+bbshome\\etc\\autopost------------------
+bbshome\\etc\\b2g_table
+bbshome\\etc\\backnumbers---------------过刊的说明
+bbshome\\etc\\bbsstatlog.plt
+bbshome\\etc\\bmhelp--------------------版务操作手册
+bbshome\\etc\\bmstand-------------------站规（版主考核）范例文档
+bbshome\\etc\\cancel_mail---------------系统搞笑邮件，具体如何使用的，待考
+bbshome\\etc\\boardref
+bbshome\\etc\\chatstation---------------
+bbshome\\etc\\checknotepad--------------
+bbshome\\etc\\endline-------------------yilu已经没有这个文件
+bbshome\\etc\\figfonts.list
+bbshome\\etc\\friendkey.0
+bbshome\\etc\\friendkey.1
+bbshome\\etc\\g2b_table
+bbshome\\etc\\keys
+bbshome\\etc\\mailkey.0
+bbshome\\etc\\mailkey.1
+bbshome\\etc\\readkey.0
+bbshome\\etc\\readkey.1
+bbshome\\etc\\rejectkey.0
+bbshome\\etc\\rejectkey.1
+bbshome\\etc\\showuser.msg--------------用户信息
+bbshome\\etc\\sysops-------------------一些站务信息，此文件可能已无用处
+bbshome\\help-------------------------帮助
+bbshome\\uhashgen.dat-----------------hash文件，加密密码用。待考。

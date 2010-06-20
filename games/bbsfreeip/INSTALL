@@ -1,0 +1,14 @@
+    本目录为BBS的IP地址查询工具，现使用QQ的IP地址库。
+简要安装过程如下：
+    a. 先确认你的系统装有unrar解压工具，如果没有，请下载，如果依赖不满足，请自己下载相应的unrar.
+    http://www.rarlab.com/rar/rarlinux-3.3.0.tar.gz 并安装这个工具。
+    b. 取QQ 的IP地址库，输入下面的命令将获得QQ的最近的IP地址库：
+    make getip
+    c. (可选择修改ip_arrange.txt,可以做成patch,方便以后修改)
+    patch ip_arrange.txt < patch.txt
+    d. 编译程序，输入下面的命令编译程序
+    make
+    e. 复制文件到目的目录中,用下面的命令完成。
+    make install
+
+    注意，更新时，用make clean清除，然后重复上述a-e。

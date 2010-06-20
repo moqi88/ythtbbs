@@ -1,0 +1,71 @@
+#showsechead
+<div class="clear"></div>
+<div align=right>
+<a id="show_right" title="显示右侧菜单" href="#" onclick="document.getElementById('main_right').style.display='';document.getElementById('main_left').style.width='78%';this.style.display='none';" style="display: none;">显示右侧菜单</a>
+<a title="申请新版" href="/HT/home?B=3">申请新版</a>
+<a href="mailto:sysop.bbs@yjrg.net" title="联系我们">联系我们</a>
+</div>
+<hr noshade>
+<div class="clear"></div>
+<div id="main">
+	<div id="main_left">
+		<div id="digest">
+			<div id="digest_left">
+#showsecdigest 0
+			</div>
+			<div id="digest_right">
+#showsecdigest 1
+			<div class="digest_box">
+			<h2>站内热点</h2>
+#showfile 0Announce/boa_hot
+			</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<hr noshade />
+#showmyposts
+		<h1>一见如故BBS分区推荐文章</h1>
+#showsecintro
+	</div>
+
+	<div id="main_right">
+		<div class="annbox">
+			<div align="center">
+			<a href="#" alt="隐藏" 
+				onclick="document.getElementById('main_right').style.display='none';document.getElementById('main_left').style.width='98%';document.getElementById('show_right').style.display='';">隐藏右侧菜单</a>
+			</div>
+		</div>
+		<div id="hotann" class="annbox">
+		<h2>特别专题</h2>
+#showspecialall
+		</div>
+		
+		<div id="hotann" class="annbox">
+		<h2>站点公告</h2>
+#showfile 0Announce/focus
+		</div>
+
+		<div id="goodboard" class="annbox">
+		<h2>推荐版面</h2>
+#showfile 0Announce/hotboards
+		</div>
+
+		<div id="hotboard" class="annbox">
+		<h2>热门版面</h2>
+#showhotboard 20
+		</div>
+		<div id="newboard" class="annbox">
+		<h2>新开版面</h2>
+#showfile wwwtmp/newboards.txt
+		</div>
+		<div id="links" class="annbox">
+		<h2>推荐链接</h2>
+#showExLinks
+		</div>
+	</div>
+</div>
+<div class="clear"></div>
+<hr noshade />
+<div class="annbox" align="center">
+YJRG.net &copy; 2005
+</div>

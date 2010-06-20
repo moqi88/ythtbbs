@@ -1,0 +1,16 @@
+*{ font-family:ß∫≈È,arial,sans-serif;}
+A {color:#000000;text-decoration: none;}
+A:LINK {text-decoration: none;}
+A:HOVER {COLOR: #ff0000;text-decoration: underline;background:#dddddd}
+BODY {FONT-SIZE: 14px; BACKGROUND-COLOR: #ffc8ce;
+	background-image: url(/lbgPK.jpg)}
+TABLE,TH,TD,P {FONT-SIZE: 14px}
+INPUT,TEXTAREA,SELECT {FONT-SIZE: 12px;}
+body.foot{font-size:12px;background-color:#ffc8ce;background-image: none}
+
+#boa_adv_0 {
+	text-align: center;
+}
+#boa_adv_2 {
+	text-align: center;
+}

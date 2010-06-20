@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<style type="text/css">
+			.o1 {
+				background-color:#718BD6; 
+				font-size:10px; 
+				color:#ffffff; 
+				text-decoration:none;
+			}
+
+			body {
+				margin: 0px; 
+				background-color: #F6F6F6; 
+			}
+		</style>
+
+		<script language="javascript">
+		<!--
+			var iniCols, noCols, o_mf, o_ms, s, o_icon;
+			function ini() {
+				o_mf = parent.document.getElementById("fs0");
+				o_ms = document.getElementById("menuSwitch");
+				noCols = iniCols = o_mf.cols;
+				if ((pos = noCols.indexOf(",")) != -1)
+					noCols = "0" + noCols.substring(pos);
+				s = false;
+			}
+
+			function changeLeft() {
+				s = !s;
+				o_mf.cols = s ? noCols : iniCols;
+				o_ms.innerHTML = s ? "&#9658;" : "&#9668;";
+			}
+
+			function showTitle() {
+				o_icon = document.getElementById("menuSwitch");
+				if (s == false)
+					o_icon.title = "Òþ²Ø²Ëµ¥";
+				else
+					o_icon.title = "ÏÔÊ¾²Ëµ¥";
+			}
+			//-->
+			</script>
+		</head>
+
+		<body onload="ini()">
+			<table width=100% height=100% border=0 cellpadding=0 cellspacing=0>
+				<tr>
+					<td>
+						<a href="javascript:changeLeft();" class="o1" id="menuSwitch" title="Òþ²Ø²Ëµ¥" onMouseOver="javascript:showTitle();">&#9668;</a>
+					</td>
+				</tr>
+			</table>
+		</body>
+</html>
+<!-- copy from newsmth.org, hehe -->

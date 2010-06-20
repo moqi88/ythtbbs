@@ -1,0 +1,40 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<title>一见如故 BBS</title></head>
+<body>
+<center><br>
+<p>
+　</p>
+<p>
+　</p>
+<p>
+　</p>
+<p>
+<font color=red size=4><br><br>
+</font>
+<font color=red size=2>请稍候，正在分配最快的服务器给您登录...</p>
+</font>
+<font color=red size=4>
+<script>
+i=1
+var autourl=new Array()
+autourl[1]="http://yjrg.net/?jump=1"
+autourl[2]="http://proxy.yjrg.net/?jump=1"
+
+function choose(url)
+{
+	if(i) {
+		top.location=url;
+		i=0;
+	}
+}
+function run()
+{
+	for(var i=1;i<autourl.length;i++)
+		document.write("<img src="+autourl[i]+" width=1 height=1 onerror=choose('"+autourl[i]+"')>");
+}
+run()
+</script>
+</font>
+</body>
+</html>

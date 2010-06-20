@@ -1,0 +1,147 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>$BBS.NameCn $JOURNAL.BoardEn版期刊 (第$JOURNAL.Number期)
+</title>
+</head>
+
+<body>
+<table height="93" cellSpacing="0" cellPadding="0" width="700" align="center" border="0">
+  <tbody>
+    <tr bgColor="#000080">
+      <td align="middle" colSpan="2" height="14" width="700"><font color="#ffffff">======== </font>
+       <a href="http://$BBS.Domain"><font color="#FFFFFF">$BBS.NameCn</font></a><font color="#ffffff">系 列 电 子 刊 物 ========</font>
+      </td>
+    </tr>
+    <tr>
+      <td align="middle" width="286" bgColor="#e0f5e4" height="80" rowSpan="3">
+	      <img src="http://yjrg.net/yjrg.gif" onload="javascript:if(this.width&gt;document.body.clientWidth-30)this.width=document.body.clientWidth-30" border="0" endimg width="284" height="111">
+     </td>
+      <td align="left" width="494" bgColor="#e0f5e4" height="26">&nbsp;策划制作:
+         <a href="mailto:$JOURNAL.Publisher.bbs@$BBS.Domain">$JOURNAL.Publisher</a><a name="#ArticleIndex"></a></td>
+    </tr>
+    <tr>
+      <td align="left" width="494" bgColor="#e0f5e4" height="26">&nbsp;出版日期: $JOURNAL.Date</td>
+    </tr>
+    <tr bgColor="#000080">
+      <td align="middle" colSpan="2" height="14" width="700">
+        <marquee scrollAmount="2" scorlldelay="2"><strong><font color="#ff0000"><b><font color="#ffffff">欢迎访问$BBS.NameCn! 更多精采内容在等着您!</font></b></font></strong></marquee>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+
+<table height="30" cellSpacing="1" width="700" align="center" bgColor="#000000" border="0">
+  <tbody>
+    <tr bgColor="#990000">
+      <td bgColor="#993300" height="10" width="700">
+        <div align="center">
+          <b><font color="#ffffff">◆◆ 本 期 索 引 ◆◆</font></b>                                                                                  
+        </div>
+      </td>
+    </tr>
+    <tr vAlign="top" bgColor="#ffffff">
+      <td bgColor="#e4e4d6" height="20" width="700">
+                    <center height="20" ><font color="#009900" size=3>$JOURNAL.Name</font>
+        <table cellSpacing="6" width="90%" align="center">
+          <tbody>
+            <tr>
+              <td vAlign="top" width="50%">
+                <table cellSpacing="0" cellPadding="0" width="100%" border="0">
+                  <tbody>
+<!--$INDEX.Begin[0-10]-->
+                    <tr><td><li><a href="#ArticleIndex$INDEX.No">$INDEX.Title</a><br></td></tr>
+<!--$INDEX.End-->
+                   </tbody>
+                 </table>
+              </td>
+              <td vAlign="top" width="50%">
+                <table cellSpacing="0" cellPadding="0" width="100%" border="0">
+                  <tbody>
+<!--$INDEX.Begin[10-9999]-->
+                    <tr><td><li><a href="#ArticleIndex$INDEX.No">$INDEX.Title</a><br></td></tr>
+<!--$INDEX.End-->
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <form action="http://www.cn99.com/cgi-bin/subscribe" method="post" target="_blank">
+          <table border="0">
+           <tbody>
+	    <tr>
+              <td colspan="2"><font style="font-weight: bold">要订阅邮件列表,请在下面填写您的e-mail地址:</font></td></tr>
+                <tr><td><input name="email"></td>
+                  <td><input value="订阅" name="sub" type="submit">&nbsp;&nbsp;
+                    <input value="$BBS.NameEn_$JOURNAL.BoardEn" name="listname" type="hidden">
+                    <input value="退订" name="unsub" type="submit">
+                </td>
+              </tr>
+            </tbody>
+           </table>
+        </form>
+     </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+
+<!--$ARTICLE.Begin[0-9999]-->
+<a name="ArticleIndex$ARTICLE.No"></a>
+<table cellSpacing="1" cellPadding="1" width="700" align="center" bgColor="#333333" border="0" valign="bottom">
+  <tbody>
+    <tr vAlign="bottom" bgColor="#ffcc00">
+      <td align="middle" bgColor="#e4e4d6" colSpan="4" height="10" width="700">
+        <div align="left">
+          <b>◆</b>$ARTICLE.Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>作者:</b>$ARTICLE.Author
+	</div>
+      </td>
+    </tr>
+    <tr bgColor="#ffffff">
+      <td colSpan="4" height="15" width="700">
+$ARTICLE.Content
+       <p>  </p>
+        <div align="right">
+		<a href="http://$JOURNAL.BoardEn.$BBS.Domain"><u><font color="red">点这里看更多精彩文章</font></u></a>&nbsp;&nbsp;                         
+          <a href="#ArticleIndex"><u><font color="red">回到索引</font></u></a>
+        </div>
+      <p>　</p> 
+     </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<!--$ARTICLE.End-->
+
+<br><br>
+<table cellSpacing="1" cellPadding="1" width="700" align="center" bgColor="#333333" border="0" valign="bottom">
+  <tbody>
+    <tr vAlign="bottom" bgColor="#ffcc00">
+      <td align="middle" bgColor="#e4e4d6" colSpan="4" height="15">
+        <div align="left">
+          <b>刊物说明</font></b>
+        </div>
+      </td>
+    </tr>
+    <tr bgColor="#ffffff">
+      <td bgColor="#ffffff" colSpan="4" height="15">
+        <p><a href="http://$BBS.Domain" target="_blank"><font color="red"><br>
+</font></a>本期刊是由<a href="http://$BBS.Domain">$BBS.NameCn</a>制作的电子期刊，内容来自于$JOURNAL.BoardEn($JOURNAL.BoardCn)版网友原创文章。
+欢迎您访问本站，也欢迎您给朋友们转发或推荐本期刊。好东西大家分享 :)</p>
+      </td>
+    </tr>
+    <tr bgColor="#ffffff">
+      <td bgColor="#ffffff" colSpan="4" height="15">
+	      <hr>
+        <center>$BBS.NameCn All Rights Reserved.
+        <hr>
+      </td>
+    </tr>	
+  </tbody>
+</table>
+
+</body>
+</html> 

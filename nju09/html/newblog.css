@@ -1,0 +1,424 @@
+/* =================================== */
+/* | Part 0: 公用 BLOG 样式          | */
+/* =================================== */
+
+body {
+	text-align: center;
+	margin: 0px;
+	font-size: 14px;
+	background: #fff url('/blogBackground.gif') repeat scroll;
+	font-family: Tahoma;
+}
+
+h2 {
+	font-size: 14px;
+	font-weight: bold;
+	color: #369;
+	background-color: #eee;
+	height: 30px;
+	line-height: 32px;
+	padding: 0px 10px 0px 10px;
+	margin: 4px 0px 4px 0px;
+}
+
+a {
+	text-decoration: none;
+}
+
+.clear {
+	clear: both;
+}
+
+.red {
+	color: red;
+}
+
+.red:hover {
+	color: white;
+}
+
+.white {
+	color: white;
+}
+
+.white:hover {
+	color: red;
+}
+
+.blue {
+	color: blue;
+}
+
+.blue:hover {
+	color: red;
+}
+
+.randomColor0 {
+	color: #C93;
+}
+
+.randomColor1 {
+	color: #369;
+}
+
+.randomColor2 {
+	color: #000;
+}
+
+.randomColor3 {
+	color: #993;
+}
+
+.randomColor4 {
+	color: #639;
+}
+
+.randomColor5 {
+	color: #396;
+}
+
+.randomColor6 {
+	color: #633;
+}
+
+.randomColor7 {
+	color: #666;
+}
+
+.randomColor8 {
+	color: #066;
+}
+
+.randomColor9 {
+	color: #990;
+}
+
+#blog_headBox {
+	clear: both;
+	height: 200px;
+	background-image: url("/blogHead.jpg");
+	background-repeat: no-repeat;
+	position: relative;
+}
+
+#blog_footBox {
+	text-align: center;
+	position: relative;
+	clear: both;
+	padding: 10px;
+	background-color: #fff;
+	font-size: 12px;
+}
+
+#blog_footLogo1, #blog_footLogo2 {
+	position: relative;
+	margin-top: 5px;
+	float: left;
+	margin-left: 10px;
+}
+
+#blog_footLogo2 {
+	float: right;
+	margin-top: 10px;
+	margin-right: 10px;
+}
+
+.blog_footLogo1Img, .blog_footLogo2Img {
+	border-width: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+
+/* =================================== */
+/* | Part 1: blogpage.c 对应的样式   | */
+/* =================================== */
+
+/* ----------------------------------- */
+/* |Part 1.1: blogpage.c 的主界面    | */
+/* ----------------------------------- */
+
+#blogpage_mainBox {
+	width: 750px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+
+#blogpage_nav1, #blogpage_nav2 {
+	text-align: left;
+	position: absolute;
+	bottom: 0px;
+	left: 10px;
+	width: 240px;
+	line-height: 26px;
+	height: 24px;
+	overflow: hidden;
+	color: #fff;
+}
+
+#blogpage_nav2 {
+	left: 250px;
+	width: 490px;
+	text-align: right;
+}
+
+#blogpage_annBox, #blogpage_loginBox, 
+		#blogpage_hotPostBox, #blogpage_newPostBox,
+		#blogpage_friendBox, 
+		#blogpage_recommendBox, #blogpage_indexBox, 
+		#blogpage_blogIndexByLetterBox, #blogpage_blogIndexByCateBox {
+	clear: both;
+	text-align: left;
+	padding: 10px;
+	background-color: #fff;
+	font-size: 12px;
+}
+
+#blogpage_annBox {
+	padding: 0px;
+	background-color: #fff;
+}
+
+#blogpage_annLeft {
+	padding: 10px;
+	float: left;
+	width: 600px;
+}
+
+#blogpage_annRight {
+	padding: 10px;
+	float: left;
+	width: 110px;
+	text-align: center;
+}
+
+#blogpage_annRight form {
+	padding: 0px;
+	margin: 0px;
+}
+
+#blogpage_annRight input {
+	font-family: Tahoma;
+	margin: 0px;
+	padding: 1px;
+}
+
+
+#blogpage_loginBox {
+	text-align: center;
+}
+
+#blogpage_loginBox h2 {
+	text-align: left;
+}
+
+#blogpage_loginBox form {
+	margin: 0px;
+	padding: 0px;
+}
+
+#blogpage_loginBox input {
+	font-family: Tahoma;
+	font-size: 12px;
+	padding: 0px;
+	margin: 0px;
+}
+
+#blogpage_hotAndNewPostBox {
+	background-color: #fff;
+}
+
+#blogpage_hotPostBoxWithoutPreview, #blogpage_newPostBoxWithoutPreview {
+	padding: 10px;
+	background-color: #fff;
+	font-size: 12px;
+	float: left;
+	width: 355px;
+	text-align: left;
+}
+
+
+.blogpage_hotPostItem, .blogpage_newPostItem {
+	line-height: 26px;
+	overflow: hidden;
+	color: #888;
+	height: 24px;
+}
+
+.blogpage_hotPostItemImg, .blogpage_newPostItemImg {
+	border: #eee 1px solid;
+	margin: 0px;
+	padding: 0px;
+	height: 18px;
+	width: 18px;
+	margin-bottom: -6px;
+}
+
+.blogpage_hotPostItemPostTitleLink, .blogpage_newPostItemPostTitleLink {
+	font-size: 14px;
+	color: #F90;
+	font-weight: bold;
+}
+
+#blogpage_friendBox ul{
+	clear: left;
+	list-style-type: none;
+	display: inline;
+	padding: 0px;
+	margin: 0px;
+}
+
+#blogpage_friendBox li{
+	float: left;
+	display: block;
+	text-align: center;
+	width: 90px;
+	margin-right: 14px;
+}
+
+.blogpage_friendImg {
+	width: 50px;
+	height: 50px;
+	border: #eee solid 1px;
+	margin: 0px;
+	padding: 4px;
+}
+
+.blogpage_friendTxt {
+	line-height: 26px;
+	height: 24px;
+}
+
+#blogpage_recommendBox {
+	position: relative;
+}
+
+#blogpage_recommendBox p {
+	overflow: hidden;
+	line-height: 20px;
+	height: 18px;
+	margin: 0px;
+	padding: 0px;
+}
+
+#blogpage_recommendHotBlog, #blogpage_recommendNewBlog, 
+		#blogpage_recommendSubject {
+	position: relative;
+	float: left;
+	width: 240px;
+	text-align: left;
+}
+
+#blogpage_recommendNewBlog {
+	width: 240px;
+	margin-left: 10px;
+}
+
+
+#blogpage_recommendSubject {
+	float: right;
+	width: 230px;
+	position: relative;
+}
+
+.blogpage_recommendSubjectItem {
+	text-align: center;
+}
+
+#blogpage_recommendSubject1, #blogpage_recommendSubject2, 
+		#blogpage_recommendSubject3, #blogpage_recommendSubject4 {
+	width: 50px;
+	float: left;
+}
+
+#blogpage_recommendSubject2, #blogpage_recommendSubject3 {
+	margin-left: 10px;
+}
+
+
+#blogpage_recommendSubject4 {
+	float: right;
+}
+
+#blogpage_indexBox ul{
+	clear: left;
+	list-style-type: none;
+	display: inline;
+	padding: 0px;
+	margin: 0px;
+}
+
+#blogpage_indexBox li{
+	float: left;
+	display: block;
+	text-align: center;
+	width: 25px;
+	margin: 0px 2px 0px 1px;
+}
+
+/* ----------------------------------- */
+/* |Part 1.2: blogpage.c 的副界面    | */
+/* |          按字母索引排列的 BLOG  | */
+/* |          按分类索引排列的 BLOG  | */
+/* ----------------------------------- */
+
+
+#blogpage_blogIndexByCateBox ul{
+	clear: left;
+	list-style-type: none;
+	display: inline;
+	padding: 0px;
+	margin: 0px;
+}
+
+#blogpage_blogIndexByCateBox li{
+	float: left;
+	display: block;
+	text-align: center;
+	line-height: 26px;
+	height: 24px;
+	width: 40px;
+	margin: 0px 2px 0px 3px;
+}
+
+.blogpage_blogIndexByLetterItem, .blogpage_blogIndexByLetterLastItem, 
+		.blogpage_blogIndexByCateItem, .blogpage_blogIndexByCateLastItem {
+	line-height: 26px;
+	overflow: hidden;
+	color: #888;
+	height: 24px;
+	border-width: 0px 0px 1px 0px;
+	border-color: #ddd;
+	border-style: solid;
+}
+
+.blogpage_blogIndexByCateLastItem, .blogpage_blogIndexByCateLastItem {
+	border-width: 0px;
+}
+
+.blogpage_blogIndexByLetterItemImg, .blogpage_blogIndexByCateItemImg {
+	border: #eee 1px solid;
+	margin: 0px;
+	padding: 0px;
+	height: 18px;
+	width: 18px;
+	margin-bottom: -6px;
+}
+
+
+.blogpage_blogIndexByLetterItemSubject, .blogpage_blogIndexByCateItemSubject {
+	font-size: 14px;
+}
+
+.blogpage_blogIndexByLetterItemSubjectLink, 
+	.blogpage_blogIndexByCateItemSubjectLink {
+	color: #888;
+}
+
+.blogpage_blogIndexByCateH2 {
+	font-size: 12px;
+}
+
+
+

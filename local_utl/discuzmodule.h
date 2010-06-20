@@ -1,0 +1,1 @@
+#define DISCUZ_PASSWD_LENGTH 32

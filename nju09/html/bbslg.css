@@ -1,0 +1,20 @@
+@import url(./bbssg.css);
+
+body {
+	/*
+	font-size: 12px;
+	line-height: 18px;
+	*/
+	font-size: 14px;
+	line-height: 21px;
+}
+
+.f1{font-size:14px; font-family:ß∫≈È; }
+
+td {
+	/*
+	font-size: 12px;
+	*/
+	font-size: 14px;
+}
+

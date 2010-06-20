@@ -1,0 +1,274 @@
+#!/bin/sh
+#
+# configure script for Cthulhu.
+#
+# arguments: none
+# environment variables: CC, CFLAGS
+#
+# Created: Nov. 2002
+# Last updated: Feb. 2003
+#
+
+runcc ()
+{
+	$CC $CFLAGS config-test.c $1 2> /dev/null > /dev/null
+}
+
+defcc ()
+{
+	echo "#include <unistd.h>" > config-test.c
+	echo "#include <stdlib.h>" >> config-test.c
+	echo "#include <string.h>" >> config-test.c
+	echo "#include <errno.h>" >> config-test.c
+	echo $1 >> config-test.c
+	runcc
+}
+
+check_syntax ()
+{
+	echo $EO "Checking whether compiler supports $1...\c"
+	echo "int $1 rotfl; int main () { return (0); }" > config-test.c
+	if runcc
+		then echo "yes"
+		else echo "no"; echo "#define $1$2" >> config.h
+	fi
+	return 0;
+}
+
+check_libs ()
+{
+	echo $EO "Checking whether socket functions are external...\c"
+	echo "int main () { return (socket ()); }" > config-test.c
+	if runcc "-lnsl -lsocket"
+		then echo "yes"; LDFLAGS="$LDFLAGS -lnsl -lsocket"
+		else echo "no"
+	fi
+}
+
+check_epoll ()
+{
+	if [ $FDINT != "epoll" ] 
+		then return 0
+	fi
+	echo $EO "Checking whether system supports epoll...\c"
+	cat << EOF > config-test.c
+	#include "epoll.h"
+	int main () { return (epoll_create(0)); }
+EOF
+	if runcc "-lepoll"
+		then echo "yes"; LDFLAGS="$LDFLAGS -lepoll"
+		else echo "no, fallback to poll"; FDINT="poll"
+	fi
+}
+
+check_inc ()
+{
+	echo "#include <$1>" > config-test.c
+	echo "int main () { return (0); }" >> config-test.c
+	runcc
+}
+
+check_incs ()
+{
+	while read incfile
+	 do
+		echo $EO "Checking for <$incfile>...\c"
+#		echo "#include <$incfile>" > config-test.c
+#		echo "int main () { return (0); }" >> config-test.c
+#		if runcc
+		if check_inc $incfile
+			then echo "yes"
+			else echo "no";
+			echo "You need to install the missing header file";
+			return 1;
+		fi
+	 done < config/includes
+}
+
+set_line ()
+{
+	echo "/* $3 */ " >> config.h
+	if [ "$1" = "1" ]
+		then
+			echo "# define $2 1" >> config.h
+		else
+			echo "/* # define $2 1 */" >> config.h
+		fi
+	echo "" >> config.h
+}
+
+if [ -x /usr/xpg4/bin/grep ]; then GREP=/usr/xpg4/bin/grep; else GREP=grep; fi
+[ -z `echo -e rotfl | $GREP -e -e` ] && EO='-e'
+. ./localconf
+MAKEFILE=Makefile
+
+rm -f config.h
+
+[ -z "$CC" ] && { echo "\$CC unset. Setting to cc"; CC=cc; }
+
+echo $EO "Checking wheter C-Compiler works...\c"
+echo "int main () { return (0); }" > config-test.c
+runcc || { echo "no."; exit 0; }
+echo "yes"
+echo $EO "Checking whether the produced executable works...\c"
+./a.out || { echo "no -- check your configuration"; exit 1; }
+echo "yes"
+
+cat << EOF >> config.h
+#ifndef CONFIG_H
+#define CONFIG_H
+EOF
+
+check_syntax volatile
+check_syntax inline
+check_syntax __inline__ " inline"
+check_syntax const
+
+echo $EO "Checking whether all include files are available...\c"
+rm -f config-test.c
+
+while read incfile
+	do echo "#include <$incfile>" >> config-test.c
+done < config/includes
+
+echo "int main () { return (0); }" >> config-test.c
+
+if runcc
+	then echo "yes"
+	else echo "no"; echo "Checking to see which one:"
+	check_incs
+	exit 2
+fi
+
+echo $EO "Checking whether the C-Headers support prototypes...\c"
+echo "extern long rotfl __P ((char *));" >> config-test.c
+if runcc
+	then echo "yes."
+	else echo "no"
+	echo $EO "Checking whether the C-Compiler supports ANSI-Prototypes...\c"
+	echo "int main (int argc, char *argv[]) { return (0); }" > config-test.c
+	if runcc
+		then echo "#define __P(x) x" >> config.h; echo "yes"
+		else echo "no."; echo "#define __P(x)" >> config.h
+	fi
+fi
+
+check_libs
+
+check_epoll
+
+echo "int main () { return (0); }" >> config-test.c
+
+echo "" >> config.h
+echo "/* Sent in every HTTP-response */" >> config.h
+echo "# define SERVER \"Cthulhu/$VERSION (`uname -s`/`uname -m|sed -e 's,/,:,'`)\"" >> config.h
+#echo "" >> config.h
+#echo "/* Basedir where domains can be found */" >> config.h
+#echo "#define BASEDIR \"$BASEDIR\"" >> config.h
+#echo "" >> config.h
+
+cat << EOF >> config.h
+
+/* Basedir of domains and binaries */
+# define BASEDIR "$BASEDIR"
+
+/* CGI exec configuration directory */
+# define CGI_CONFIG_DIR "$CGICONFIGDIR"
+
+/* Maximum connections allowed per host. Be aware that proxies might
+   need really _many_ connections */
+# define MAX_CONN_PER_HOST $MAXCONNS
+
+/* Maximum post requests allowed simultaneously for one host. Set this
+   to a low value, to avoid Denial-of-Service attacks */
+# define MAX_POST_REQUESTS_PER_HOST $MAXPOSTS
+
+/* Define this, so that you don't have to reload the cache after changing
+   cached data in a domain */
+# define CONSISTENT_CACHE 1
+
+/* Shutdown connection after a client is idle for that time */
+# define HTTP_TIMEOUT $HTTPTIMEOUT /* 2 minutes look reasonable. You might want to decrease it */
+
+/* Pipe Buffer size. 2 Pages look reasonable */
+# define PIPE_BUF_SIZE $PIPEBUFSIZE
+
+/* Maximum size of socket input buffer */
+# define MAX_SOCKBUFFER $SOCKETBUFFER
+
+/* Default size for incrementing the socket input buffer */
+# define SOCKBUFSZ $SOCKBUFSZ
+
+/* If you want gzip Content-Transfer-Encoding */
+# define WANT_GZIP_ENCODING $GZIPENCODING
+
+EOF
+
+set_line "$FORK" "WANT_FORK" "Set FORK to 1 if you want cthulhu to fork, if it gets too many connections."
+set_line "$CLIENTREWRITE" "WANT_CLIENT_REWRITE" "set to 1 to enable local clients to rewrite the source address. Recommended for http-ssl"
+set_line "$SENDFILE" "WANT_SENDFILE" "set to 1 to use sendfile(2) instead of write"
+
+echo $EO "Checking notificaton interface...\c"
+[ -f "$FDINT.c" ] || { echo "ERROR: Interface $FDINT does not exist"; exit 23; }
+echo $FDINT
+
+ln -f $FDINT.c fdint.c
+
+echo $EO "Checking if <alloca.h> exists...\c"
+
+if check_inc "alloca.h"
+then
+	echo "# define HAVE_ALLOCA_H 1 " >> config.h; echo "" >> config.h;
+	echo "yes"
+else
+	echo "no"
+fi
+
+echo "#endif /* CONFIG_H */" >> config.h
+
+genmakefile()
+{
+	echo "Generating Makefile... in $1"
+
+	echo "CC=$CC" > $1/$MAKEFILE
+	echo "CFLAGS=-D_XOPEN_SOURCE=500 -D_XOPEN_SOURCE_EXTENDED=500 -D_BSD_SOURCE $CFLAGS $3" >> $1/$MAKEFILE
+	echo "LD=$CC" >> $1/$MAKEFILE
+	echo "LDFLAGS=$LDFLAGS" >> $1/$MAKEFILE
+	echo "BASEDIR=$BASEDIR" >> $1/$MAKEFILE
+
+	cat config/Makefile.$2 >> $1/$MAKEFILE
+}
+
+genmakefile "." "template"
+genmakefile "utils/cgi-exec" "cgiexec" "-I../../"
+genmakefile "utils/auth" "auth"
+if [ "$SSL" = "1" ]; then genmakefile "utils/httpssl" "httpssl"; echo "utils: cgi-exec auth http-ssl" >> Makefile; else echo "all:" > utils/httpssl/Makefile; echo "utils: cgi-exec auth" >> Makefile; fi
+
+echo "Generating ctrlhulhu..."
+
+cat << EOF > ctrlhulhu
+#!/bin/sh
+
+BASEDIR=$BASEDIR
+EXEC=$BASEDIR/bin/cthulhu
+EOF
+
+cat config/ctrlhulhu.in >> ctrlhulhu
+chmod 0750 ctrlhulhu
+
+rm -f config-test.c config-test.o a.out
+
+echo "Generating add_domain..."
+
+cat << EOF > add_domain
+#!/bin/sh
+
+[ -z "\$1" ] && { echo "Syntax: add_domain <domainname>"; exit 23; }
+[ -d \$1 ] || exit 1
+
+( cd \$1 && find . -type f | sed -e 's/\.\///' | grep -v cgi | grep -v php ) > filelist-\$1
+
+chown $XUSER:$XGROUP \$1 filelist-\$1
+EOF
+
+chmod 0750 add_domain

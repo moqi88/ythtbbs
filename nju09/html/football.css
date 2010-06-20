@@ -1,0 +1,66 @@
+table {
+	padding: 0px;
+	margin: 0px;
+}
+
+tr {
+	padding: 0px;
+	margin: 0px;
+}
+
+td {
+	padding: 0px;
+	margin: 0px;
+}
+
+body {
+	overflow-x: scroll;
+}
+
+h2 {
+	text-align: left;
+	padding-left: 10px;
+}
+
+#bbsfb_graph_main {
+	width: 100%;
+}
+
+.graph_right {
+}
+
+
+.graph_left {
+	text-align: center;
+}
+
+.block {
+	display: block;
+	overflow: visible;
+}
+.graph_left_text {
+	border-color: #67a8ea;
+	border-width: 1px;
+	border-style: solid;
+	background-color: #eee;
+	display: block;
+	margin: 5 5 5 5px;
+	width: 60px;
+}
+
+.graph_left_text2 {
+	border-color: #eee;
+	border-width: 3px;
+	border-style: solid;
+}
+
+.team_text {
+	border-color: green;
+	border-style: solid;
+	border-width: 1px;
+	padding: 3px;
+	margin: 5px;
+	background-color: #dfffd6;
+	text-align: center;
+	width: 90px;
+}
