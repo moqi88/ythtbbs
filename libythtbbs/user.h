@@ -118,6 +118,8 @@ int saveuserdata(char *uid, struct userdata *udata);
 int loaduserdata(char *uid, struct userdata *udata);
 int insertuserec(const struct userec *urec);
 int getuser(const char *userid, struct userec **urec);
+int checkdiscuzuser(const char *userid);
+int checkdiscuzpasswd(char *userid, const char *passbuf);
 int login_get_user(const char *user, struct userec **urec);
 int user_registered(const char *userid);
 int deluserec(const char *userid);
@@ -129,5 +131,6 @@ int apply_passwd(int (*fptr) (const struct userec *, char *), char *arg);
 int lock_passwd();
 int unlock_passwd(int fd);
 int has_fill_form(char *userid);
+int logindiscuz(const char *user, struct userec **urec);
 extern struct userec *passwdptr;
 #endif

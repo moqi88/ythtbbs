@@ -25,6 +25,12 @@
 #define ERRLOG	MY_BBS_HOME "/deverrlog"
 #endif
 
+// define log file for writesyslog
+#define ERRORLOG 0
+#define ADMINLOG 1
+#define TESTLOG 2
+#define TESTLOGLOG 3
+
 struct hword {
 	char str[80];
 	void *value;
@@ -47,6 +53,7 @@ void _errlog(char *fmt, ...)
     __attribute__ ((format(printf, 1, 2)));
 #define errlog(format, args...) _errlog(__FILE__ ":%s line %d " format, __FUNCTION__,__LINE__ , ##args)
 void writelog(char* logfilename, char* log);
+void writesyslog(int logtype, char* log);
 
 #define file_size(x) ({f_stat(x)->st_size;})
 #define file_time(x) ({f_stat(x)->st_mtime;})
@@ -71,7 +78,7 @@ void filteransi(char *line);
 char *utf8cut(char *str, int maxsize);
 char *gb2utf8(char *to, int tolen, char *from);
 char *utf82gb(char *to0, int tolen0, char *from0);
-int code_convert(char *from_charset,char *to_charset,char *inbuf,int inlen,char *outbuf,int outlen);
+int code_convert(const char *from_charset,const char *to_charset,char *inbuf,int inlen,char *outbuf,int outlen);
 int ascii2hex(char* ascii, char* hex );
 int int2ascii(int num, char* ascii);
 

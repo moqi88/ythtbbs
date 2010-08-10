@@ -9,6 +9,10 @@
 #include <dirent.h>
 
 #include "ythtbbs.h"
+#include "discuzsql.h"
+#include "discuzmodule.h"
+#include <iconv.h>    // convert gb2312 to utf8
+#include "bbs.h"
 
 static int isoverride(struct override *o, char *id);
 
@@ -506,6 +510,113 @@ getuser(const char *userid, struct userec **urec)
 	}
 	return 0;
 }
+
+//根据userid，访问数据库，如果需要，则使用checkdiscuzpasswd()匹配密码
+//如果没有，或用户已经kickout，那也找不到，找不到返回 0
+//如果有，参考register函数，写入.PASSWDS
+int
+checkdiscuzuser(const char *userid)
+{
+	char sqlbuf[512];
+	char useridutf8[22];
+	MYSQL *mysql = NULL;
+	MYSQL_RES *res;
+
+	mysql = mysql_init(mysql);
+    mysql = mysql_real_connect(mysql,"localhost",SQLUSER, SQLPASSWD, SQLDB,0, NULL,0);
+	if (!mysql) {
+		perror("Can not open database\n");
+		return -1;
+	}
+	if(code_convert("gbk","utf8",userid, strlen(userid),useridutf8, 22 )==-1)   // 21 = (IDLEN+2)/2*3   longest utf-8
+	{
+		printf("convert username error \n");
+		mysql_close(mysql);
+		return -1;
+	}
+	mysql_query(mysql, "set names utf8");
+	sprintf(sqlbuf,"select username from pre_ucenter_members where username = \'%s\'; " , useridutf8 );
+	mysql_query(mysql, sqlbuf);
+	res = mysql_store_result(mysql);
+
+	if (mysql_num_rows(res)!=0)
+	{
+		// userid already in discuz
+		mysql_free_result(res);
+		mysql_close(mysql);
+		return 1;
+	}
+	else
+	{
+		mysql_free_result(res);
+		mysql_close(mysql);
+		return 0;
+	}
+}
+
+int
+checkdiscuzpasswd(char *userid, const char *passbuf)
+{
+	// userid will update because of Capital letter issues
+	char discuzuseridtrans[22];
+
+	char sqlbuf[512];
+	char useridutf8[22];
+	char discuzpassmd5[DISCUZ_PASSWD_LENGTH + 1];
+	MYSQL *mysql = NULL;
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	if (userid[0] == 0 || strchr(userid, '.')) {
+		return 0;
+	}
+
+	mysql = mysql_init(mysql);
+    mysql = mysql_real_connect(mysql,"localhost",SQLUSER, SQLPASSWD, SQLDB,0, NULL,0);
+	if (!mysql) {
+		perror("Can not open database\n");
+		return -1;
+	}
+	if(code_convert("gbk","utf8",userid, strlen(userid),useridutf8, 22 )==-1)   // 21 = (IDLEN+2)/2*3   longest utf-8
+	{
+		printf("convert username error \n");
+		mysql_close(mysql);
+		return -1;
+	}
+	mysql_query(mysql, "set names utf8");
+	sprintf(sqlbuf,"select password,salt,username from pre_ucenter_members where username = \'%s\'; " , useridutf8 );
+	mysql_query(mysql, sqlbuf);
+	res = mysql_store_result(mysql);
+
+	if (mysql_num_rows(res)!=0)
+	{
+		// userid already in discuz
+		row = mysql_fetch_row(res);  // row[0] is password , row[1] is salt, row[2] is username in discuz
+		gendiscuzpasswd(discuzpassmd5, row[1], passbuf);
+/*		// for log
+		char logfile[256], errorlog[256];
+			sprintf(logfile, "/home/bbs/reclog/telnet.log");
+			sprintf(errorlog, "discuzpass=%s  genpass=%s  originalpass=%s\n",
+					row[1], discuzpassmd5, passbuf);
+			writelog(logfile, errorlog);
+		// logend
+*/
+		// update user name to make sure it's the same (not capitalized) as the one in discuz
+		if(code_convert("utf8","gbk",row[2],strlen(row[2]),discuzuseridtrans, 16 )==-1)   // its userid should be less than 16
+		{
+			printf("convert username error \n");
+			mysql_close(mysql);
+			return -1;
+		}
+		sprintf(userid, "%s", discuzuseridtrans);
+		return !memcmp(row[0], discuzpassmd5, DISCUZ_PASSWD_LENGTH);
+	}
+	else
+		mysql_free_result(res);
+		mysql_close(mysql);
+		return 0;
+}
+
+
 
 //根据uid，填充urec指针到，指向passwdptr中相应条目，该结构只读
 //返回对应偏移量，第一个编号为 1

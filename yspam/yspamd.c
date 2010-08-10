@@ -15,7 +15,7 @@ connsql()
 	if (sql)
 		return 0;
 	sql = mysql_init(NULL);
-	mysql_real_connect(sql, "localhost", SQLUSER, SQLPASSWD, SQLDB, 0, NULL,
+	mysql_real_connect(sql, "localhost", BBSSQLUSER, BBSSQLPASSWD, BBSSQLDB, 0, NULL,
 			   0);
 	return 0;
 }

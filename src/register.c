@@ -35,8 +35,6 @@
 
 #define	ENABLE_EMAILREG	1	/* 邮件注册，改天把跟www的define弄到一起去*/
 #define isletter(a)     (a>= 'A' && a <= 'Z')?1:((a>= 'a' && a <= 'z')?1:0)
-#define DISCUZ_USERNAME_LENGTH 15
-// discuz下的username length
 
 char *sysconf_str();
 
@@ -149,6 +147,11 @@ new_register()
 			else
 				prints
 				    ("此帐号刚刚死亡待清理，请明天再来注册\n");
+		} else if ((r = checkdiscuzuser(newuser.userid))) {
+			if (r > 0)
+				prints("此帐号已被人在Web下注册，帐号所有者可直接用原帐号登录\n");
+			else
+				prints("数据库内部错误，请报告给SYSOP\n");
 		} else if (strlen(useridutf8)>DISCUZ_USERNAME_LENGTH)	{
 			prints("此帐号超过了五个中文字符长度的限制\n");
 		}
@@ -208,6 +211,15 @@ new_register()
 	sethomepath(genbuf, newuser.userid);
 	mkdir(genbuf, 0775);
 	tracelog("%s newaccount %d %s", newuser.userid, allocid, realfromhost);
+	//		add new user to discuz database
+	if(discuzreg(useridutf8, passbuf, newuser.salt)==-1)
+	{
+		char log[256];
+		sprintf(log, "register id %s written to discuz database failed!\n", useridutf8);
+		writesyslog(ERRORLOG, log);
+	}
+	//		end of adding new user to discuz database
+
 }
 
 int
@@ -290,6 +302,7 @@ check_register_info()
 	int info_changed = 0;
 	//char occu_des[12][8]={"学生", "教育业", "计算机", "工程师",  "金融业",  "服务业",
 	//			"商业", "公务员", "制造业", "互联网",  "传媒", "其他"};
+	// for discuz database
 
 	clear();
 	memcpy(&tmpu, currentuser, sizeof (tmpu));
@@ -308,23 +321,29 @@ check_register_info()
 		strcpy(uinfo.username, tmpu.username);
 		update_utmp();
 	}
+// 各位维护，下面这个判断要注意了，这是Firebird远古时代，给没有填写过注册单，PERM_LOGINOK为假的用户使用的
+// 现在，只有新注册的账号需要执行这个if语句里头的内容
+// 而整个函数是每次登录时user_login()都需要调用的。之所以放在register.c里面是因为当初架构没有做好。
+// written by bridged
 	if (!USERPERM(currentuser, PERM_LOGINOK)) {
-		while ((strlen(udata.realname) < 4)
+// 由于政治环境的原因，我们不再强求用户必须输入姓名和城市等可能暴露隐私的选项
+/*		while ((strlen(udata.realname) < 4)
 		       || (strstr(udata.realname, "  "))
-		       || (strstr(udata.realname, "　"))) {
+		       || (strstr(udata.realname, "　"))) { */
 			move(3, 0);
-			prints("请输入您的姓名 :\n");
+			prints("请输入您的真实姓名（此项信息可不填） :\n");
 			getdata(4, 0, "> ", udata.realname, NAMELEN, DOECHO,
 				YEA);
-		}
+//		}
 
-		while ((strlen(udata.address) < 4)
-		       || (strstr(udata.address, "   "))) {
+/*		while ((strlen(udata.address) < 4)
+		       || (strstr(udata.address, "   "))) {  */
 			move(5, 0);
-			prints("请输入您所在的城市 ：\n");
+			prints("请输入您所在的城市 （此项信息可不填）：\n");
 			getdata(6, 0, "> ", udata.address, NAMELEN, DOECHO,
 				YEA);
-		}	
+//		}
+
 #if 0	//为什么加上这一段就不行了啊？？！！
 		while ( udata.occupation < 'a' || udata.occupation > 'l') {
 			move(7, 0);
@@ -335,13 +354,13 @@ check_register_info()
 		}
 #endif
 		move(10, 0);
-		prints("请输入您的联系电话(可选) ：\n");
+		prints("请输入您的联系电话（此项信息可不填） ：\n");
 		getdata(11, 0, "> ", udata.phone, STRLEN, DOECHO, YEA);
 		if (strchr(udata.email, '@') == NULL) {
 			char buf[sizeof (udata.email)];
 			move(12, 0);
 			prints
-			    ("\033[1;31m请输入您的电子邮件(用于找回密码，请认真填写)\n");
+			    ("\033[1;31m请输入您的电子邮件（用于找回密码，请务必认真填写）\n");
 			move(13, 0);
 		      EMAILAGAIN:
 			getdata(14, 0, "> ", buf, sizeof (buf), DOECHO, YEA);
@@ -351,6 +370,14 @@ check_register_info()
 				prints("\033[1;32memail格式不正确，请输入正确的email地址。\033[m");
 				goto EMAILAGAIN;
 			}
+			//		write new user information to discuz database
+			if(discuzupdateemail(currentuser->userid, udata.email, currentuser->firstlogin)==-1)
+			{
+				char log[256];
+				sprintf(log, "register id %s updating its email in discuz database failed!\n", currentuser->userid);
+				writesyslog(ERRORLOG, log);
+			}
+			//		end of write new information to discuz database
 		}
 		saveuserdata(tmpu.userid, &udata);
 	}

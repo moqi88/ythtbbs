@@ -1,6 +1,7 @@
 #ifndef MD5_FAINT_H
 #define MD5_FAINT_H
 #include <sys/types.h>
+#include "discuzmodule.h"  // for discuz PHP modules and transfer
 typedef unsigned int md5_uint32;
 typedef unsigned int word32;
 
@@ -15,6 +16,8 @@ void MD5Update(struct MD5Context *context, unsigned char const *buf,
 	       unsigned len);
 void MD5Final(unsigned char digest[16], struct MD5Context *context);
 void MD5Transform(md5_uint32 buf[4], const unsigned char in[64]);
+
+// int php_md5( char *src, char *dst,  int nsize);  //something wrong in this func, delete it
 
 /*
  * This is needed to make RSAREF happy on some MS-DOS compilers.

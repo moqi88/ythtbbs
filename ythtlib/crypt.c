@@ -572,6 +572,41 @@ genpasswd(char pw_crypted[MD5LEN], const int salt, const char *pw_input)
 }
 
 int
+gendiscuzpasswd(char* discuzpassmd5, const char *salt, const char *passbuf)
+{
+	char temppassmd5salt[DISCUZ_PASSWD_LENGTH + DISCUZ_SALT_LENGTH + 1];  // 6 is salt length
+	char buff[16];
+	int j;
+	struct MD5Context mdc;
+	MD5Init(&mdc);
+	MD5Update(&mdc, passbuf, strlen(passbuf));
+	MD5Final(buff, &mdc);
+//	php_md5(passbuf, discuzpassmd5, DISCUZ_PASSWD_LENGTH);
+	for(j=0;j<16;j++)
+	{
+	    sprintf(discuzpassmd5+j*2,"%x",(buff[j] & 0xF0)>>4);
+	    sprintf(discuzpassmd5+j*2+1,"%x",buff[j] & 0x0F);
+	}
+	sprintf(discuzpassmd5+33,"%s","\0");
+//  md5 phase 1 complete
+//	printf("passbuf = %s discuzpasswd phase 1 = %s\n", passbuf, discuzpassmd5);
+	sprintf(temppassmd5salt, "%s%s", discuzpassmd5, salt);
+//	php_md5(temppassmd5salt, discuzpassmd5, DISCUZ_PASSWD_LENGTH);
+	MD5Init(&mdc);
+	MD5Update(&mdc, temppassmd5salt, strlen(temppassmd5salt));
+	MD5Final(buff, &mdc);
+	for(j=0;j<16;j++)
+	{
+	    sprintf(discuzpassmd5+j*2,"%x",(buff[j] & 0xF0)>>4);
+	    sprintf(discuzpassmd5+j*2+1,"%x",buff[j] & 0x0F);
+	}
+	sprintf(discuzpassmd5+33,"%s","\0");
+//	md5 phase 2 complete
+//	printf("discuzpasswd phase 2 = %s\n", discuzpassmd5);
+	return 1;
+}
+
+int
 checkpasswd(const char pw_crypted[MD5LEN], int salt, const char *pw_try)
 {
 	char pw_totest[MD5LEN];

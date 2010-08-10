@@ -181,7 +181,7 @@ utf82gb(char *to0, int tolen0, char *from0)
 	return convertEncoding(to0, tolen0, from0, 1);
 }
 
-int code_convert(char *from_charset,char *to_charset,char *inbuf,int inlen,char *outbuf,int outlen)
+int code_convert(const char *from_charset,const char *to_charset,char *inbuf,int inlen,char *outbuf,int outlen)
 {
 	iconv_t cd;
 	char **pin = &inbuf;

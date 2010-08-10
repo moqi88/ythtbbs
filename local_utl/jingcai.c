@@ -33,7 +33,7 @@ int main(void)
   fh=(struct fileheader *)malloc(sizeof(struct fileheader));
   mysql=mysql_init(mysql);
 
-  mysql=mysql_real_connect(mysql,"localhost",SQLUSER, SQLPASSWD, SQLDB,0, NULL,0);
+  mysql=mysql_real_connect(mysql,"localhost",BBSSQLUSER, BBSSQLPASSWD, BBSSQLDB,0, NULL,0);
   if (!mysql) {
       exit(0);    
   }

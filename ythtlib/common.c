@@ -50,6 +50,31 @@ void writelog(char* logfilename, char* log)
 	fclose(fp);
 }
 
+void writesyslog(int logtype, char* log)
+{
+	char logfilename[256];
+	FILE *fp;
+	char yearmonth[5];  // current year and month
+	time_t now;
+	now=time(NULL);
+	strftime(yearmonth, 5, "%y%m", localtime(&now));
+	// log type can be error, admin and test, which is defined as ERRORLOG,ADMINLOG and TESTLOG
+	if (logtype == ERRORLOG)
+		sprintf(logfilename, "%s%s%s", "/home/bbs/reclog/", yearmonth, "error.log");
+	else if (logtype == ADMINLOG)
+		sprintf(logfilename, "%s%s%s", "/home/bbs/reclog/", yearmonth, "admin.log");
+	else if (logtype == TESTLOG)
+		sprintf(logfilename, "%s%s%s", "/home/bbs/reclog/", yearmonth, "test.log");
+	else if (logtype == TESTLOGLOG)
+		sprintf(logfilename, "/home/bbs/reclog/testlog.log");
+	else
+		sprintf(logfilename, "%s%s%s", "/home/bbs/reclog/", yearmonth, "illegal.log");
+	// write log in the selected file
+	fp = fopen(logfilename , "a+");
+	fputs(log,fp);
+	fclose(fp);
+}
+
 int
 mystrtok(char *buf, int c, char *tmp[], int max)
 {

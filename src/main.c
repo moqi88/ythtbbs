@@ -56,6 +56,7 @@ int showansi = 1;
 int convcode = 0;
 int runtest;
 int runssh = 0;
+int dzmode=0;
 struct bbsinfo bbsinfo;
 
 char bbsdomain[STRLEN];
@@ -462,6 +463,18 @@ getuptime()
 	return n;
 }
 
+static int get_user(const char *user, struct userec **urec)
+{
+	int unum;
+	unum=login_get_user(user, urec);
+	if (unum>0) {
+		return unum;
+
+	}
+	unum=logindiscuz(user, urec);
+	return unum;
+}
+
 static void
 login_query()
 {
@@ -542,12 +555,14 @@ login_query()
 			    ("\033[1;37m本系统目前无法以 \033[36mnew\033[37m 注册, 请用\033[36m guest\033[37m 进入...\033[m\n");
 			scroll();
 #endif
-		} else if (*uid == '\0' || !(usernum = login_get_user(uid, &currentuser))) {
-			move(t_lines - 1, 0);
-			clrtoeol();
-			prints
-			    ("\033[1;31m错误的使用者帐号...注册新帐号输入 new\033[0m\n");
-			scroll();
+		} else if (*uid == '\0' || !(usernum = get_user(uid, &currentuser)) ) {
+		//	if () {
+				move(t_lines - 1, 0);
+				clrtoeol();
+				prints
+			    		("\033[1;31m错误的使用者帐号或密码...注册新帐号输入 new\033[0m\n");
+				scroll();
+		//	}
 		} else if (strcasecmp(currentuser->userid, "guest") == 0) {
 			//currentuser->userlevel = 0;
 			break;
@@ -1357,4 +1372,97 @@ Q_Goodbye()
 		u_exit();
 	started = 0;
 	exit(0);
+}
+
+
+
+//static int getdiscuzuser(const char* uname, char* upass, char* umail);
+
+//由用户名、密码和email生成新用户
+static int createuser(const char* uname, const char* upass, const char* umail)
+{
+	struct userec newuser;
+	int allocid;
+	struct userdata udata;
+	char md5pass[MD5LEN];
+
+	memset(&newuser, 0, sizeof (newuser));
+	memset(&udata, 0, sizeof (udata));
+	memcpy(newuser.userid, uname, IDLEN+2);
+	//memcpy(newuser.passwd, upass, MD5LEN);
+	newuser.salt = getsalt_md5();
+	genpasswd(md5pass, newuser.salt, upass);
+	memcpy(newuser.passwd, md5pass, MD5LEN);
+	memcpy(udata.email, umail, 60);
+	newuser.ip = 0;
+	newuser.userdefine = 0xffffffff;
+	newuser.userlevel |= PERM_BASIC | PERM_CHAT | PERM_POST | PERM_PAGE | PERM_LOGINOK;
+	newuser.flags[0] = PAGER_FLAG | BRDSORT_FLAG2;
+	newuser.userdefine &= ~(DEF_NOLOGINSEND);
+	newuser.userdefine &= ~(DEF_INTERNETMAIL);
+	if (convcode)
+		newuser.userdefine &= ~DEF_USEGB;
+
+	newuser.flags[1] = 0;
+	newuser.firstlogin = newuser.lastlogin = time(NULL);
+	newuser.lastlogout = 0;
+	allocid = insertuserec(&newuser);
+	if (allocid > MAXUSERS || allocid <= 0) {
+		return 0;
+	}
+	sethomepath(genbuf, newuser.userid);
+	mkdir(genbuf, 0775);
+	saveuserdata(uname, &udata);
+	tracelog("%s new_discuz_account %d %s", newuser.userid, allocid, realfromhost);	
+	return 1;
+	
+}
+
+
+//完成用户在discuz中的查询并添加到.PASSWD
+//输入输出接口同login_get_user
+//输入用户名user，如果不存在，返回0
+//如果存在，从参数返回urec
+//同时返回值是usernum
+int logindiscuz(const char *user, struct userec **urec)
+{
+	char uname[IDLEN+2];
+	char passbuf[PASSLEN];
+	//char upass[MD5LEN];
+	char umail[60]="";
+	int flag=0;
+	int unum;
+	if (!user) {
+		return 0;
+	}
+	flag=checkdiscuzuser(user);
+	//flag=getdiscuzuser(user, upass, umail);
+	if (!flag) {
+		//dz中查无此人
+		return 0;
+	}
+	move(t_lines - 1, 0);
+	clrtoeol();
+	getdata(t_lines - 1, 0, "您是discuz注册用户，请输入密码激活: ",
+				passbuf, PASSLEN, NOECHO, YEA);
+	scroll();
+	memcpy(uname, user, IDLEN+2);
+	flag=checkdiscuzpasswd(uname, passbuf);
+	if (!flag) {
+		//dz中密码错误
+		return 0;
+	}
+	flag=createuser(uname, passbuf, umail);
+	if (!flag) {
+		writesyslog(ERRORLOG, "create user failed\n");
+		return 0;
+	}
+	move(t_lines - 1, 0);
+	clrtoeol();
+	prints("\033[1;31mdiscuz用户已激活，请再次输入密码登录\033[0m\n");
+	scroll();
+	unum=login_get_user(uname, urec);
+	//(*urec)->userlevel |= PERM_BASIC | PERM_CHAT | PERM_POST | PERM_PAGE | PERM_LOGINOK;
+	//updateuserec(*urec, unum);
+	return unum;
 }

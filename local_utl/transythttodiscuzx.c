@@ -79,7 +79,7 @@ int transferuser()
 		}
 */
 // write it in mysql member table
-		sprintf(sqlbuf,"select username from pre_common_member where username = \'%s\'; " , useridutf8 );
+		sprintf(sqlbuf,"select username from pre_ucenter_members where username = \'%s\'; " , useridutf8 );
 		mysql_query(mysql, sqlbuf);
 		res = mysql_store_result(mysql);
 
@@ -91,7 +91,8 @@ int transferuser()
 		else  //new id in discuz
 		{
 			sprintf(sqlbuf, "insert into pre_common_member (email, username, password, groupid, regdate, timeoffset) values ('%s', '%s', '%s', %d, %ld, %d)", 
-				data.email, useridutf8, md5hexpasswd, 10, lookupuser.firstlogin, 9999);
+				data.email, useridutf8, md5hexpasswd, 20, lookupuser.firstlogin, 9999);
+			// 20 is the special group for telnet users (first login)
 			mysql_query(mysql, sqlbuf);
 		}
 
@@ -108,7 +109,7 @@ int transferuser()
 		{
 			// save salt in lastlogintime because the length of salt in discuz is not long enough
 			sprintf(sqlbuf, "insert into pre_ucenter_members (email, username, password, regdate, lastlogintime) values ('%s', '%s', '%s', %ld, %u)",
-				data.email, useridutf8, md5hexpasswd, lookupuser.firstlogin, (unsigned int)salt);
+				data.email, useridutf8, md5hexpasswd, lookupuser.firstlogin, (unsigned int)lookupuser.salt);
 			mysql_query(mysql, sqlbuf);
 		}
 

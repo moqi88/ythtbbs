@@ -20,8 +20,7 @@ int main(int argc, char *argv[])
 
 	if(argc != 3)
 	{
-		printf("Usage: discuzgenpasswd <salt> <password_entering>\n");
-		printf(" -common_member: transfer the new id in .PASSWD_discuz to the database of discuz\n");
+		printf("Usage: discuzgenpasswd <salt> <input_password>\n");
 		exit(0);
 	}
 	strcpy(password, argv[2]);

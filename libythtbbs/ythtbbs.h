@@ -43,4 +43,5 @@
 #include "blog.h"
 #endif
 #include "moneycenter.h"
+#include "discuzreg.h"
 #endif

@@ -219,6 +219,7 @@ insertuseridhash(const char *userid, const int num, const int tohead)
 int
 finduseridhash(const char *userid)
 {
+	// 在一个用id字符所生成的hash表里面（每个ASCII码为一个分支点）查找所需的userid
 	int i;
 	unsigned h;
 	struct UCACHEHASH *uhash = binfo->ucachehashshm;

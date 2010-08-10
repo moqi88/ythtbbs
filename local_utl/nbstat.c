@@ -221,7 +221,7 @@ main(int argc, char *argv[])
 	now = time(NULL) - end * 86400;
 	for (i = 0; i < days; i++) {
 		n = localtime(&now);
-		sprintf(file, "newtrace/%d-%02d-%02d.log", 1900 + n->tm_year,
+		sprintf(file, MY_BBS_HOME "/newtrace/%d-%02d-%02d.log", 1900 + n->tm_year,
 			1 + n->tm_mon, n->tm_mday);
 		fp = fopen(file, "r");
 		if (fp == NULL) {
