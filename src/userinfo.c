@@ -249,6 +249,9 @@ int real;
 		newurec.salt = getsalt_md5();
 		genpasswd(md5pass, newurec.salt, buf);
 		memcpy(newurec.passwd, md5pass, 16);
+		// change password in discuzx
+		if (changediscuzpasswd(newurec.userid, newurec.salt, buf, 1)<0)
+			prints("\n\n同步web密码失败。本帐号访问web可能会产生问题，请向sysop报告。\n");
 		break;
 	case '3':
 		move(4,0);

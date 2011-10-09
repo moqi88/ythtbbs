@@ -3,7 +3,8 @@
 static int
 whatch(unsigned char ch)
 {
-	if (isalpha(ch))
+	const char* permitted = "_";
+	if (isalpha(ch) || isdigit(ch) || strchr(permitted, ch))
 		return 1;
 	if (ch > 128 + 32 && ch <= 128 + 32 + 94)
 		return 2;

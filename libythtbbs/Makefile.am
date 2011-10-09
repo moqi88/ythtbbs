@@ -5,7 +5,7 @@ AM_CFLAGS = $(OPTI_CFLAGS)
 .PHONY: ythtlib
 ythtlib:
 	$(MAKE) -C ../ythtlib
-LDADD = $(top_srcdir)/ythtlib/libytht.a
+LDADD = $(top_srcdir)/ythtlib/libytht.a -lmysqlclient
 noinst_LIBRARIES = libythtbbs.a
 noinst_PROGRAMS = gensectree
 gensectree_SOURCES = gensectree.c 
@@ -24,7 +24,7 @@ libythtbbs_a_SOURCES = boardrc.c misc.c record.c user.c article.c modetype.c \
 	docutil.c msg.c politics.c goodgbid.c binaryattach.c permissions.c \
 	bbseva.c attach.c regform.c announce.c board.c sectree.c sectreeop.c \
 	bbsinfo.c uinfo.c mail.c broadcast.c vote.c yspam.c regform.c \
-	posttmpl.c moneycenter.c
+	posttmpl.c moneycenter.c discuzreg.c
 
 EXTRA_libythtbbs_a_SOURCES = sectree.c
 
@@ -33,9 +33,10 @@ noinst_HEADERS = announce.h article.h attach.h bbseva.h bbsinfo.h \
 	binaryattach.h board.h boardrc.h broadcast.h docutil.h goodgbid.h \
 	mail.h misc.h modes.h modetype.h msg.h permissions.h politics.h \
 	record.h regform.h sectree.h uhashgen.h uinfo.h user.h vote.h yspam.h \
-	posttmpl.h ythtbbs.h moneycenter.h
+	posttmpl.h ythtbbs.h moneycenter.h discuzreg.h
 
 if BLOG
 libythtbbs_a_SOURCES += blog.c
 noinst_HEADERS += blog.h
 endif
+

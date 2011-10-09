@@ -121,7 +121,7 @@ new_register()
 		getdata(t_lines - 5, 0,
 			"请输入帐号名称 (Enter User ID, \"0\" to abort): ",
 			newuser.userid, IDLEN + 1, DOECHO, YEA);
-		if (newuser.userid[0] == '0') {
+		if (newuser.userid[0] == '0' && newuser.userid[1] == '\0') {
 			longjmp(byebye, -1);
 		}
 		clrtoeol();
@@ -134,9 +134,8 @@ new_register()
 
 		if (!goodgbid(newuser.userid)) {
 			prints("不正确的中英文帐号\n");
-		} else if (strlen(newuser.userid) < 2
-			|| (strlen(newuser.userid) == 2 && !(isletter(newuser.userid[0]) && isletter(newuser.userid[1])) ) ){
-			prints("帐号至少需有两个英文字母!\n");
+		} else if (strlen(newuser.userid) < 3){
+			prints("帐号至少需有三个字符!\n");
 		} else if ((*newuser.userid == '\0')
 			   || is_bad_id(newuser.userid)) {
 			prints
@@ -216,6 +215,7 @@ new_register()
 	{
 		char log[256];
 		sprintf(log, "register id %s written to discuz database failed!\n", useridutf8);
+		prints("register id %s written to discuz database failed!\n", useridutf8);
 		writesyslog(ERRORLOG, log);
 	}
 	//		end of adding new user to discuz database

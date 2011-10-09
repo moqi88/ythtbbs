@@ -138,6 +138,8 @@ extern  char ULIST[];
 #define DOT_DIR     ".DIR"         /* Name of Directory file info */
 #define THREAD_DIR  ".THREAD"      /* Name of Thread file info */
 #define DIGEST_DIR  ".DIGEST"      /* Name of Digest file info */
+#define TRANSRECORD_DIR   ".TRANSRECORD"   /* Name of the transfer record file info */
+#define DX_THREAD	".DXTHREAD"		   /* for thread and post match for article transfer in discuzx */
 #define BADWORDS    "etc/.badwords_new"     /* word list to filter */
 #define SBADWORDS   "etc/.sbadwords_new"
 #define PBADWORDS   "etc/.pbadwords_new"
@@ -176,6 +178,10 @@ extern  char ULIST[];
 /* the flowing is board flag2 */
 #define NJUINN_FLAG     0x1
 #define WATCH_FLAG	0x2
+	/* 前两条应该是给维护使用的，后一条
+	 * DISCUZWEB_FLAG 表示这个版面使用discuzx数据库
+	 */
+#define DISCUZWEB_FLAG	0x4
 /* board flag2 end */
 
 #define ZAPPED  0x1		/* For boards...tells if board is Zapped */

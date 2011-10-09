@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 {
 	char password[DISCUZ_PASSWD_LENGTH];
 	int salt;
+	int i;
 	char md5password[MD5LEN];
 	char md5hexpasswd[DISCUZ_PASSWD_LENGTH+1];  // 32 is defined in discuz and add \0 at the end
 
@@ -31,6 +32,7 @@ int main(int argc, char *argv[])
 		printf("convert password error \n");
 		exit(0);
 	}
-	printf("%s",md5hexpasswd);
+	for(i=0; i<DISCUZ_PASSWD_LENGTH; i++)
+		printf("%c",md5hexpasswd[i]);
 	return 1;
 }

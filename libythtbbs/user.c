@@ -643,8 +643,8 @@ getuseridbynum(const int uid) {
 
 int login_get_user(const char *user, struct userec **urec)
 {
-	if(isdigit(*user))
-		return getuserbynum(atoi(user), urec);
+	if(*user == '*') //we reserve the function here.
+		return getuserbynum(atoi(user + 1), urec);
 	return getuser(user, urec);
 }
 

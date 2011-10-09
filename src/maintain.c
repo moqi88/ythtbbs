@@ -411,6 +411,47 @@ setsecstr(char *buf, int ln)
 	}
 }
 
+unsigned short int connect_board_to_discuzx(char* title)
+{
+	MYSQL *mysql = NULL;
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	char boardcnameutf8[24];
+	char sqlbuf[256];
+	unsigned short int discuzboardid;
+
+	if(code_convert("gbk","utf8", title, strlen(title), boardcnameutf8, 24 )==-1)  // 24 is the length of title
+	{
+		prints("中文转换为utf8出错");
+		return 0;
+	}
+	mysql = mysql_init(mysql);
+    mysql = mysql_real_connect(mysql,"localhost",SQLUSER, SQLPASSWD, SQLDB,0, NULL,0);
+	if (!mysql) {
+		prints("无法打开数据库\n");
+		return 0;
+	}
+	mysql_query(mysql, "set names utf8");
+
+	sprintf(sqlbuf,"select fid from %sforum_forum where name = \'%s\'; " , DISCUZ_DATABASE_PRE, boardcnameutf8 );
+	mysql_query(mysql, sqlbuf);
+	res = mysql_store_result(mysql);
+
+	if (mysql_num_rows(res)!=0)
+	{
+		row = mysql_fetch_row(res);
+		discuzboardid=(unsigned short int)atoi(row[0]);
+		prints("discuzx中同名中文版面找到，fid号是%d", discuzboardid);
+	}
+	else
+	{
+		discuzboardid = 0;
+		prints("设为与discuzx互通但却未能找到同中文名版面");
+	}
+	return discuzboardid;
+
+}
+
 int
 m_newbrd()
 {
@@ -690,7 +731,8 @@ m_newbrd()
 	move(ln + 2, 4);
 	prints("[\033[0;4;32m0\033[m] 不转信  "
 			"[\033[0;4;32m1\033[m] 点对点转信  "
-			"[\033[0;4;32m2\033[m] cn.bbs转信");
+			"[\033[0;4;32m2\033[m] cn.bbs转信"
+			"[\033[0;4;32m3\033[m] DiscuzX数据库同步 ");
 	getdata(ln, 30, NULL, genbuf, 2, DOECHO, YEA);
 	switch(genbuf[0]) {
 		case '1':
@@ -702,6 +744,13 @@ m_newbrd()
 			sprintf(info, "%s%-14s\033[1;32m%s\033[m\n", 
 					info, "转信类型", "cn.bbs转信");
 			newboard.flag |= INNBBSD_FLAG;
+			break;
+		case '3':
+			newboard.flag2 |= DISCUZWEB_FLAG;
+			// find the discuzx board with the same cname
+			newboard.discuzxfid = connect_board_to_discuzx(newboard.title);
+			sprintf(info, "%s%-14s\033[1;32m%s%d\033[m\n",
+					info, "转信类型", "DX版号", newboard.discuzxfid);
 			break;
 		case '0':
 		default:
@@ -880,6 +929,7 @@ m_editbrd()
 	int pos, mode, ln;
 	struct boardheader fh, newfh;
 	char info[256 * 10], report[256 * 21];
+	char tempbuf[20];
 	
 	if (!USERPERM(currentuser, PERM_BLEVELS) && 
 			!USERPERM(currentuser, PERM_SPECIAL4))
@@ -953,6 +1003,12 @@ m_editbrd()
 		strcpy(genbuf, "cn.bbs转信");
 	else if (fh.flag2 & NJUINN_FLAG)
 		strcpy(genbuf, "点对点转信");
+	else if (fh.flag2 & DISCUZWEB_FLAG)
+	{
+		// show discuzx board id
+//		strcpy(genbuf, "DX WEB互通");
+		sprintf(genbuf, "DX互通版号%d", fh.discuzxfid);
+	}
 	else
 		strcpy(genbuf, "不转信");
 	sprintf(info, "%s%-14s\033[1;32m%-16s\033[m\n", 
@@ -1297,29 +1353,43 @@ m_editbrd()
 	move(ln + 2, 4);
 	prints("[\033[0;4;32m0\033[m] 不转信  "
 			"[\033[0;4;32m1\033[m] 点对点转信  "
-			"[\033[0;4;32m2\033[m] cn.bbs转信");
+			"[\033[0;4;32m2\033[m] cn.bbs转信 "
+			"[\033[0;4;32m3\033[m] DiscuzX数据库同步");
 	getdata(ln, 30, NULL, genbuf, 2, DOECHO, YEA);
 	if (*genbuf) {
 		switch(genbuf[0]) {
 			case '0':
 				newfh.flag &= ~INNBBSD_FLAG;
 				newfh.flag2 &= ~NJUINN_FLAG;
+				newfh.flag2 &= ~DISCUZWEB_FLAG;
+				newfh.discuzxfid = 0;
 				sprintf(genbuf, "%-16s", "不转信");
 				break;
 			case '1':
 				newfh.flag &= ~INNBBSD_FLAG;
 				newfh.flag2 |= NJUINN_FLAG;
+				newfh.flag2 &= ~DISCUZWEB_FLAG;
 				sprintf(genbuf, "%-16s", "点对点转信");
 				break;
 			case '2':
 				newfh.flag |= INNBBSD_FLAG;
 				newfh.flag2 &= ~NJUINN_FLAG;
+				newfh.flag2 &= ~DISCUZWEB_FLAG;
 				sprintf(genbuf, "%-16s", "cn.bbs转信");
+				break;
+			case '3':
+				newfh.flag &= ~INNBBSD_FLAG;
+				newfh.flag2 &= ~NJUINN_FLAG;
+				newfh.flag2 |= DISCUZWEB_FLAG;
+				// connect to discuzx board
+				newfh.discuzxfid = connect_board_to_discuzx(newfh.title);
+				sprintf(tempbuf, "%s%d", "DX互通版号", newfh.discuzxfid);
+				sprintf(genbuf, "%-16s", tempbuf);
 				break;
 		}
 		if ((newfh.flag & INNBBSD_FLAG) != (fh.flag & INNBBSD_FLAG) 
-			|| (newfh.flag2 & NJUINN_FLAG) != 
-				(fh.flag2 & NJUINN_FLAG)) {
+			|| (newfh.flag2 & NJUINN_FLAG) != (fh.flag2 & NJUINN_FLAG)
+			|| (newfh.flag2 & DISCUZWEB_FLAG) != (fh.flag2 & DISCUZWEB_FLAG)) {
 			ptr = strstr(info, "转信类型");
 			ptr += 19;
 			*ptr = '3';

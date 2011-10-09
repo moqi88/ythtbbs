@@ -1,20 +1,58 @@
-    这个系统是在 FireBird BBS 3.0KCN 版本 上修改来的,现在用于一塌糊涂 BBS.
-BBS 域名 为 ytht.net,IP 为 162.105.31.222
-    BBS 系统由一塌糊涂 BBS 的系统维护人员和其它爱好者改写.
-    在改写的过程中,主要参考和使用了下列BBS软件
 
-    老农的FB2000的部分代码
-    南京大学小百合站的zhch的njuweb 0.9的全部代码
-    水木清华BBS的部分代码
-    im-httpd, Michael Bacarella
-    bftpd, Max-Wilhelm Bruker
+    一路BBS继承了原先一塌糊涂站（http://ytht.net）的一见如故（yjrg.net）分支，
+并且在这一分支上进行ytht telnet和discuzx整合的工作。
+    这个工作目前开源部分的代码发布和进度可以到 http://code.google.com/p/ythtbbs/ 
+查看。咨询可以去 http://groups.google.com/group/ythtbbs_dev 或者直接上一路BBS问。
+这套代码除少数部分以外，都是开源免费的。大家可以自由用于商业或非商业的建站，但
+使用前请上一路BBS http://www.yilubbs.com，在站长工作室版面说一声。我们欢迎任何感
+兴趣的朋友加入。
+    以上所提各站，在中国大陆，均有可能需要翻墙连上。
 
-    还有一些软件,因为本身获得的时候没有注意原作者,所以在这里就不一一列出了,
-欢迎原作者随时联系指正.
+                                                               yilubbs.com
 
-								ytht.net
+版本号：
 
-目录结构及文件说明
+本程序是ytht bbs的yilubbs分支，开发方向为ytht telnet与discuzx web整合，
+当前版本号为：0.1.02
+
+一、安装说明
+
+安装请参照根目录下的INSTALL文件提示进行安装，需要有一定的linux和C的基础。
+
+本代码同样需要安装discuzx X2 20110817版本，请在discuz网站下载。http://www.discuz.net
+目前暂时没有能够处理discuzx和njuweb冲突的问题，所以建议先把discuzx安装在/var/www下的
+一个自建目录下，避免与根目录下的ytht njuweb代码冲突。
+
+本站会在新的版本中解决这一问题。
+
+安装中提供的ancientythtlogin插件，请添加到discuzx的./source/plugin目录下。用于在使用
+本代码以前，原有telnet用户的discuzx登录。如果您是新装本代码，则不需要这个插件。
+
+二、开机启动
+
+1.开机后需要启动如下内容
+
+apache
+httpd
+以上两个是任何网站都必需的
+
+/home/bbs/bin/bbslogd
+/home/bbs/bin/bbsd
+/home/bbs/bin/sshbbsd
+/home/bbs/bin/bbspop3d
+
+以上分别是站点数据统计，站点telnet服务，站点ssh服务，站点信件服务的开启命令，其中ssh如果端口少于1024，
+可能需要root帐号启动。
+
+crontab crontab.bbs
+一些你自己的自动执行命令，但这个不在svn代码里，你可能会发现一些问题，请按本文最上方所述的地址提问，
+我们给予解答或样本文件，然后慢慢总结经验，发布更方便的版本。
+
+2.怎样令telnet中的改动（比如改动src,libythtbbs,ythtlib等）在ssh中生效：
+
+进入smth_sshbbsd，make install，然后用root帐号重启sshbbsd
+
+三、目录结构及文件说明
 by idsnow @yilubbs.com 2009-3-27
 按：梳理了一下目录结构和文件，很多还不清楚，可能描述也不正确，大家看了可以把不正确的该一下，以后作为维护参考资料。
 1、目录结构
@@ -126,3 +164,41 @@ bbshome\\etc\\showuser.msg--------------用户信息
 bbshome\\etc\\sysops-------------------一些站务信息，此文件可能已无用处
 bbshome\\help-------------------------帮助
 bbshome\\uhashgen.dat-----------------hash文件，加密密码用。待考。
+
+四、重要的导入程序
+
+    如果你已经是ytht bbs类型的安装者，并且有了一定的用户和版面数据。那么
+local_utl下的transythttodiscuzx将是重要的导入程序
+
+例如导入ytht中的用户数据到discuzx中：
+在BBS安装目录下：
+cp .PASSWD .PASSWD_discuz
+./bin/transythttodiscuzx -common_member
+备份在.PASSWD_discuz中的用户将被导入到discuzx数据库中，但是权限、参数等信
+息会消失。
+
+接着，可以导入ytht中的sysop版面到discuzx中：
+ ./bin/transythttodiscuzx -board_name sysop -start_date 090721 -step 1
+
+其中board_name为版面名称（注意大小写要和linux下boards目录中的目录名匹配）
+start_date是导入的起始日期，step是需要导入的篇数。
+导入进度存储在boards/board_name/.TRANSRECORD中
+
+
+五、早期版权说明
+
+    这个系统是在 FireBird BBS 3.0KCN 版本 上修改来的,现在用于一塌糊涂 BBS.
+BBS 域名 为 ytht.net,最早期的IP 为 162.105.31.222
+    BBS 系统由一塌糊涂 BBS 的系统维护人员和其它爱好者改写.
+    在改写的过程中,主要参考和使用了下列BBS软件
+
+    老农的FB2000的部分代码
+    南京大学小百合站的zhch的njuweb 0.9的全部代码
+    水木清华BBS的部分代码
+    im-httpd, Michael Bacarella
+    bftpd, Max-Wilhelm Bruker
+
+    还有一些软件,因为本身获得的时候没有注意原作者,所以在这里就不一一列出了,
+欢迎原作者随时联系指正.
+
+								ytht.net

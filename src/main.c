@@ -150,8 +150,8 @@ u_enter()
 	if (runssh)
 		uinfo.isssh = 1;
 	iscolor = (USERDEFINE(currentuser, DEF_COLOR)) ? 1 : 0;
-	strncpy(uinfo.userid, currentuser->userid, 20);
-	strncpy(uinfo.username, currentuser->username, 40);
+	strncpy(uinfo.userid, currentuser->userid, IDLEN + 2);
+	strncpy(uinfo.username, currentuser->username, NAMELEN);
 	getrandomstr(uinfo.sessionid);
 	//if (USERPERM(currentuser, PERM_EXT_IDLE))
 	//	uinfo.ext_idle = YEA;
@@ -588,6 +588,7 @@ login_query()
 				prints("\033[1;31m密码输入错误...\033[m\n");
 				scroll();
 			} else {
+				// 如果用户名密码正确。。。
 				if (currentuser->salt == 0) {
 					memcpy(&tmpu, currentuser,
 					       sizeof (struct userec));
@@ -626,7 +627,13 @@ login_query()
 						NOECHO, YEA);
 					scroll();
 				}
+
+				// 如果discuzx数据表中显示该帐号依然以ytht老帐号方式存储，则更新discuzx数据库
+				if (changediscuzpasswd(currentuser->userid, currentuser->salt, passbuf, 0)<0)
+					prints("\n\n同步discuzx web密码失败。本帐号访问web可能会产生问题，请向sysop报告。\n");
+
 				bzero(passbuf, PASSLEN - 1);
+
 				break;
 			}
 		}

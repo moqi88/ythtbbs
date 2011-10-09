@@ -516,6 +516,8 @@ checkpasswd_des(const char *pw_crypted, const char *pw_try)
 
 static const unsigned char itoa64[] =	/* 0 ... 63 => ascii - 64 */
     "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+static const unsigned char strtolower[] =	/* 0 ... 35 => number and lower-case alphabets */
+    "0123456789abcdefghijklmnopqrstuvwxyz";
 
 void
 to64(char *s, long v, int n)
@@ -523,6 +525,18 @@ to64(char *s, long v, int n)
 	while (--n >= 0) {
 		*s++ = itoa64[v & 0x3f];
 		v >>= 6;
+	}
+}
+
+void
+randomnumalpha(char *s, int n)
+{
+	// generate a string contains random number and lower-case alphabet
+	int i=0;
+	while(i<n)
+	{
+		s[i]= strtolower[rand()%35];  // randomly choose a character from strtolower[]
+		i++;
 	}
 }
 

@@ -36,7 +36,7 @@ struct user_info {		/* Structure used in UTMP file */
 	char userid[IDLEN + 1];
 	char nouse1;
 	short signature;
-	char username[NAMELEN];
+	char username[NAMELEN + 1];
 	unsigned int unreadmsg;
 	//time_t        lastposttime;
 	short curboard;

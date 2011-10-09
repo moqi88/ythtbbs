@@ -22,7 +22,7 @@ struct boardheader {		/* This structure is used to hold data in */
 	char sec2[4];
 	unsigned char limitchar;	//upper limit/100
 	char flag2;
-	char nouse[2];
+	unsigned short int discuzxfid;  //for saving correlative discuzx forum id, 0~65535
 	char unused[156];
 };
 

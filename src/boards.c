@@ -649,12 +649,12 @@ show_brdlist(int page, int clsflag, int newflag,
 				prints(" %4d  ", n + 1);
 			else
 				prints(" %5d ", bptr->total);
-			prints("%s%c", (ptr->flag & INNBBSD_FLAG) ? 
-				(ptr->unread ? "\033[1;32m●\033[m" : 
-				 	"\033[1;32m○\033[m") :
-				(ptr->unread ? "◆" : "◇"),
-				(ptr->zap && !(ptr->flag & NOZAP_FLAG)) ? 
-					'-' : ' ');
+			// 转信
+			if(ptr->flag & INNBBSD_FLAG)
+				prints("%s",(ptr->unread ? "\033[1;32m●\033[m" :"\033[1;32m○\033[m"));
+			else
+				prints("%s",(ptr->unread ? "◆" : "◇"));
+			prints("%c",(ptr->zap && !(ptr->flag & NOZAP_FLAG)) ? '-' : ' ');
 			strncpy(tmpBM, bptr->header.bm[0], IDLEN);
 			sprintf(buf, "[%s] %s", bptr->header.type,
 				bptr->header.title);
@@ -1892,6 +1892,8 @@ show_board_info()
 	       (fh.flag & INNBBSD_FLAG) ? "Yes" : "No");
 	prints("点对点转信讨论区: %s\n",
 	       (fh.flag2 & NJUINN_FLAG) ? "Yes" : "No");
+	prints("DiscuzX互通讨论区: %s\n",
+	       (fh.flag2 & DISCUZWEB_FLAG) ? "Yes" : "No");
 	prints("文章数上限: %d\n", fh.limitchar ? fh.limitchar * 100 : 3000);
 	prints("限制 %s 权利: %s\n",
 	       (fh.level & PERM_POSTMASK) ? "POST" :

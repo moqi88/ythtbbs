@@ -8,5 +8,5 @@
 #include "discuzmodule.h"
 int discuzreg(char* useridutf8, char* passbuf, int salt);
 int discuzupdateemail(char* userid, char* email, time_t firstlogin);
-
+int changediscuzpasswd(char* userid, int salt, char* passbuf, short int renew);
 #endif

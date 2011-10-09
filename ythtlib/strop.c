@@ -210,8 +210,8 @@ int ascii2hex(char* ascii, char* hex )
 	i=0;j=0;
 	while(i<ascii_len)
 	{
-		if(ascii[i] == '\0')
-			break;
+//		if(ascii[i] == '\0')
+//			break;
 		hi4 = (ascii[i] >> 4) & 0x0f;
 		low4 = ascii[i] & 0x0f;
 		i++;
@@ -224,7 +224,7 @@ int ascii2hex(char* ascii, char* hex )
 			exit(0);
 		}
 	}
-	hex[33]= '\0';
+	hex[32]= '\0';
 	return 1;
 }
 

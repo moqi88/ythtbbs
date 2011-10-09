@@ -15,7 +15,7 @@ noinst_PROGRAMS =  mergeb averun showuser refriend2 autoundeny autoclear \
 	basketball moredir init_key scanmark get_online_data_from_bbslists \
 	get_cmdline_from_core diskfree \
 	mail_jingcai aid weather statIP friends google_sm_maker tv \
-	showspecialboards transythttodiscuzx 
+	showspecialboards transythttodiscuzx discuzgenpasswd testpasswd 
 if BLOG
 noinst_PROGRAMS += bloglogd blogstat htmlfilter
 endif
@@ -23,7 +23,8 @@ endif
 nbstat_SOURCES = nbstat.c bmstat.c amstat.c boardstat2.c boardscore.c bbslists.c sysrecord.c 
 nbstat_LDADD = $(LDADD) -lm
 diskfree_SOURCES = diskfree.c sysrecord.c
-mergeb_SOURCES = mergeb.c record.c
+mergeb_SOURCES = mergeb.c record.c 
+transythttodiscuzx_SOURCES = transythttodiscuzx.c record.c sysrecord.c
 expire_2nd_SOURCES = 2nd_expire.c record.c
 #chboard_SOURCES = chboard.c record.c
 bbslogd_LDADD = $(LDADD) -lghthash
@@ -37,6 +38,7 @@ autoundeny_SOURCES = autoundeny.c sysrecord.c
 autoclear_SOURCES =  autoclear.c sysrecord.c
 bbsevad_LDADD = $(LDADD) $(LIBSQL)
 jingcai_LDADD = $(LDADD) $(LIBSQL)
+transythttodiscuzx_LDADD = $(LDADD) $(LIBSQL)
 newtop10_LDADD = $(LDADD) -lghthash
 autounprison_SOURCES = autounprison.c sysrecord.c
 selpersonal_LDADD = $(LDADD) -lm

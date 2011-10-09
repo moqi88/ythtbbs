@@ -392,6 +392,22 @@ int bnum;
 }
 
 int
+discuzweb_board(bname, bnum)
+char *bname;
+int bnum;
+{
+	register int i;
+	if (bnum == 0) {
+		if ((i = getbnum(bname)) == 0)
+			return 0;
+	} else
+		i = bnum;
+	if (bbsinfo.bcache[i - 1].header.flag2 & DISCUZWEB_FLAG)
+		return 1;
+	return 0;
+}
+
+int
 clubsync(bnum)
 int bnum;
 {
